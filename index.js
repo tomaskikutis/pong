@@ -9,7 +9,7 @@ function render(context, state){
 	);
 
 	// table
-	context.fillStyle = config.tableBackgroundColor;
+	context.fillStyle = "#000";
 	context.fillRect(
 		state.table.x,
 		state.table.y,
@@ -54,9 +54,11 @@ var defaultBallPosition = {
 	y: 100
 };
 
-function doBoxesIntersect(a, b) {
-  return (Math.abs(a.x - b.x) * 2 < (a.width + b.width))
-			&& (Math.abs(a.y - b.y) * 2 < (a.height + b.height));
+function doBoxesIntersect(rect1, rect2) {
+  return rect1.x < rect2.x + rect2.width
+		&& rect1.x + rect1.width > rect2.x
+		&& rect1.y < rect2.y + rect2.height
+		&& rect1.height + rect1.y > rect2.y;
 }
 
 function update(){
@@ -86,53 +88,59 @@ function update(){
 		return;
 	}
 
+	// evil bot
+	state.paddles[1].y = state.ball.y;
+
 	render(context, state);
 	window.requestAnimationFrame(update);
 }
 
-var config = {
-	tableWidth: 800,
-	tableHeightRatio: 0.5,
-	paddlePaddingRatio: 0.01,
-	tableBackgroundColor: "#000",
-	ballSizeRatio: 0.01
-};
+function getInitialState(){
+
+	var tableWidth = 800;
+	var tableHeight = tableWidth * 0.5;
+	var ballSize = tableWidth * 0.01;
+	var paddleWidth = ballSize;
+	var paddleHeight = tableHeight * 0.1;
+
+	return {
+		table: {
+			x: 0,
+			y: 0,
+			width: tableWidth,
+			height: tableHeight
+		},
+		ball: {
+			x: 500,
+			y: 100,
+			width: ballSize,
+			height: ballSize,
+			direction: 1,
+			speed: 6
+		},
+		paddles: {
+			0: {
+				x: paddleWidth,
+				y: 100,
+				width: paddleWidth,
+				height: paddleHeight,
+				score: 0
+			},
+			1: {
+				x: tableWidth - paddleWidth * 2,
+				y: 100,
+				width: paddleWidth,
+				height: paddleHeight,
+				score: 0
+			}
+		}
+	};
+}
 
 var scoreLeft = document.querySelector(".score-left");
 var scoreRight = document.querySelector(".score-right");
 
-var state = {
-	table: {
-		x: 0,
-		y: 0,
-		width: config.tableWidth,
-		height: config.tableWidth * config.tableHeightRatio
-	},
-	ball: {
-		x: 500,
-		y: 100,
-		width: config.tableWidth * config.ballSizeRatio,
-		height: config.tableWidth * config.ballSizeRatio,
-		direction: 1,
-		speed: 6
-	},
-	paddles: {
-		0: {
-			x: 100,
-			y: 100,
-			width: config.tableWidth * 0.01,
-			height: config.tableWidth * 0.1,
-			score: 0
-		},
-		1: {
-			x: 500,
-			y: 300,
-			width: config.tableWidth * 0.01,
-			height: config.tableWidth * 0.1,
-			score: 0
-		}
-	}
-};
+var state = getInitialState();
 
 var canvas = document.querySelector(".pong-table");
 
@@ -142,3 +150,15 @@ canvas.height = state.table.height;
 var context = canvas.getContext("2d");
 
 window.requestAnimationFrame(update);
+
+var canvasPosition = canvas.getBoundingClientRect();
+
+// allow player to control paddle with mouse
+document.addEventListener("mousemove", function(event){
+	state.paddles[0].y = Math.max(
+		Math.min(
+			event.pageY - canvasPosition.top, state.table.height - state.paddles[0].height
+		),
+		state.table.y
+	);
+});
