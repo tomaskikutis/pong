@@ -62,11 +62,15 @@ function doBoxesIntersect(rect1, rect2) {
 }
 
 function update(){
-	state.ball.x += state.ball.direction * state.ball.speed;
+	state.ball.x += state.ball.directionX * state.ball.speed;
+	state.ball.y += state.ball.directionY * state.ball.speed;
+
+	// evil bot
+	state.paddles[1].y = state.ball.y;
 
 	for (var key in state.paddles) {
 		if(doBoxesIntersect(state.paddles[key], state.ball)){
-			state.ball.direction = -state.ball.direction;
+			state.ball.directionX = -state.ball.directionX;
 			window.requestAnimationFrame(update);
 			return;
 		}
@@ -75,7 +79,7 @@ function update(){
 	if(state.ball.x < 0){
 		state.paddles[1].score++;
 		state.ball = Object.assign({}, state.ball, defaultBallPosition);
-		state.ball.direction = -state.ball.direction;
+		state.ball.directionX = -state.ball.directionX;
 		window.requestAnimationFrame(update);
 		return;
 	}
@@ -83,13 +87,22 @@ function update(){
 	if(state.ball.x + state.ball.width > state.table.width){
 		state.paddles[0].score++;
 		state.ball = Object.assign({}, state.ball, defaultBallPosition);
-		state.ball.direction = -state.ball.direction;
+		state.ball.directionX = -state.ball.directionX;
 		window.requestAnimationFrame(update);
 		return;
 	}
 
-	// evil bot
-	state.paddles[1].y = state.ball.y;
+	if(state.ball.y < 0){
+		state.ball.directionY = -state.ball.directionY;
+		window.requestAnimationFrame(update);
+		return;
+	}
+
+	if(state.ball.y + state.ball.height > state.table.height){
+		state.ball.directionY = -state.ball.directionY;
+		window.requestAnimationFrame(update);
+		return;
+	}
 
 	render(context, state);
 	window.requestAnimationFrame(update);
@@ -115,7 +128,8 @@ function getInitialState(){
 			y: 100,
 			width: ballSize,
 			height: ballSize,
-			direction: 1,
+			directionX: 1,
+			directionY: 1,
 			speed: 6
 		},
 		paddles: {
