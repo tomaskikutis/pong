@@ -17,6 +17,23 @@ function render(context, state){
 		state.table.height
 	);
 
+	context.fillStyle = "#0c0c0c";
+
+	var fontSize = 136.6;
+	context.font= fontSize + "px Arial";
+
+	// draw scores
+	context.fillText(
+		state.paddles[0].score,
+		state.table.width / 4 - context.measureText(state.paddles[0].score).width / 2,
+		state.table.height / 2 + fontSize / 2.8
+	);
+	context.fillText(
+		state.paddles[1].score,
+		state.table.width / 4 * 3 - context.measureText(state.paddles[1].score).width / 2,
+		state.table.height / 2 + fontSize / 2.8
+	);
+
 	context.fillStyle = "#fff";
 
 	context.fillRect(
@@ -43,9 +60,6 @@ function render(context, state){
 		1,
 		state.table.height
 	);
-
-	scoreLeft.innerText = state.paddles[0].score;
-	scoreRight.innerText = state.paddles[1].score;
 
 }
 
@@ -150,9 +164,6 @@ function getInitialState(){
 		}
 	};
 }
-
-var scoreLeft = document.querySelector(".score-left");
-var scoreRight = document.querySelector(".score-right");
 
 var state = getInitialState();
 
