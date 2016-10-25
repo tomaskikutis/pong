@@ -11,30 +11,24 @@ function render(context, state){
 		state.tableHeight
 	);
 
-	// ball
 	context.fillStyle = "#fff";
-	context.fillRect(
-		state.ballX,
-		state.ballY,
-		state.ballSize,
-		state.ballSize
-	);
 
-	// left paddle
 	context.fillRect(
-		state.paddlePadding,
-		state.paddlePadding,
-		state.paddleWidth,
-		state.paddleHeight
-	);
+			state.ball.x,
+			state.ball.y,
+			state.ball.width,
+			state.ball.height
+		);
 
-	// right paddle
-	context.fillRect(
-		state.tableWidth - state.paddleWidth - state.paddlePadding,
-		state.paddlePadding,
-		state.paddleWidth,
-		state.paddleHeight
-	);
+	for (var key in state.paddles) {
+		var paddle = state.paddles[key];
+		context.fillRect(
+			paddle.x,
+			paddle.y,
+			paddle.width,
+			paddle.height
+		);
+	}
 
 	// center line
 	context.fillRect(
@@ -45,8 +39,22 @@ function render(context, state){
 	);
 }
 
+function doBoxesIntersect(a, b) {
+  return (Math.abs(a.x - b.x) * 2 < (a.width + b.width))
+			&& (Math.abs(a.y - b.y) * 2 < (a.height + b.height));
+}
+
 function update(){
-	state = Object.assign({}, state, {ballX: state.ballX + 1});
+	state.ball.x += state.ball.direction * state.ball.speed;
+
+	for (var key in state.paddles) {
+		if(doBoxesIntersect(state.paddles[key], state.ball)){
+			state.ball.direction = -(state.ball.direction);
+			window.requestAnimationFrame(update);
+			return;
+		}
+	}
+
 	render(context, state);
 	window.requestAnimationFrame(update);
 }
@@ -63,12 +71,28 @@ var state = {
 	time: 0,
 	tableWidth: config.tableWidth,
 	tableHeight: config.tableWidth * config.tableHeightRatio,
-	ballSize: config.tableWidth * config.ballSizeRatio,
-	paddlePadding: config.tableWidth * config.paddlePaddingRatio,
-	paddleWidth: config.tableWidth * 0.01,
-	paddleHeight: config.tableWidth * 0.1,
-	ballX: 100,
-	ballY: 100
+	ball: {
+		x: 200,
+		y: 100,
+		width: config.tableWidth * config.ballSizeRatio,
+		height: config.tableWidth * config.ballSizeRatio,
+		direction: 1,
+		speed: 6
+	},
+	paddles: {
+		0: {
+			x: 100,
+			y: 100,
+			width: config.tableWidth * 0.01,
+			height: config.tableWidth * 0.1
+		},
+		1: {
+			x: 500,
+			y: 100,
+			width: config.tableWidth * 0.01,
+			height: config.tableWidth * 0.1
+		}
+	}
 };
 
 var canvas = document.querySelector("#pong-table");
