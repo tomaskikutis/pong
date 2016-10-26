@@ -67,11 +67,6 @@ function render(context, state){
 
 }
 
-var defaultBallPosition = {
-	x: 500,
-	y: 100
-};
-
 function doBoxesIntersect(rect1, rect2) {
   return rect1.x < rect2.x + rect2.width
 		&& rect1.x + rect1.width > rect2.x
@@ -133,13 +128,13 @@ function update(){
 
 	if(state.ball.x < 0){
 		state.paddles[1].score++;
-		state.ball = Object.assign({}, state.ball, defaultBallPosition);
+		state.ball = Object.assign({}, state.ball, state.defaultBallPosition);
 		state.ball.directionX = -state.ball.directionX;
 	}
 
 	if(state.ball.x + state.ball.width > state.table.width){
 		state.paddles[0].score++;
-		state.ball = Object.assign({}, state.ball, defaultBallPosition);
+		state.ball = Object.assign({}, state.ball, state.defaultBallPosition);
 		state.ball.directionX = -state.ball.directionX;
 	}
 
@@ -166,6 +161,10 @@ function getInitialState(){
 	var paddleHeight = tableHeight * 0.075;
 
 	return {
+		defaultBallPosition: {
+			x: tableWidth / 2 - ballSize / 2,
+			y: tableWidth / 2 - ballSize / 2
+		},
 		table: {
 			x: 0,
 			y: 0,
@@ -184,14 +183,14 @@ function getInitialState(){
 		paddles: {
 			0: {
 				x: tableWidth / 2 * 0.3,
-				y: 100,
+				y: tableHeight / 2 - paddleHeight / 2,
 				width: paddleWidth,
 				height: paddleHeight,
 				score: 0
 			},
 			1: {
 				x: tableWidth - tableWidth / 2 * 0.3,
-				y: 100,
+				y: tableHeight / 2 - paddleHeight / 2,
 				width: paddleWidth,
 				height: paddleHeight,
 				score: 0
@@ -209,8 +208,6 @@ canvas.height = state.table.height;
 
 var context = canvas.getContext("2d");
 
-window.requestAnimationFrame(update);
-
 var canvasPosition = canvas.getBoundingClientRect();
 
 // allow player to control paddle with mouse
@@ -222,3 +219,5 @@ document.addEventListener("mousemove", function(event){
 		state.table.y
 	);
 });
+
+window.requestAnimationFrame(update);
