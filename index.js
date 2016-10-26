@@ -18,21 +18,21 @@ function render(context, state){
 	);
 
 	// scores
-	context.fillStyle = "#0c0c0c";
+	context.fillStyle = "#fff";
 
-	var fontSize = 136.6;
+	var fontSize = 60;
 	context.font= fontSize + "px Arial";
 	
 	context.fillText(
 		state.paddles[0].score,
 		state.table.width / 4 - context.measureText(state.paddles[0].score).width / 2,
-		state.table.height / 2 + fontSize / 2.8
+		state.table.height / 6
 	);
 
 	context.fillText(
 		state.paddles[1].score,
 		state.table.width / 4 * 3 - context.measureText(state.paddles[1].score).width / 2,
-		state.table.height / 2 + fontSize / 2.8
+		state.table.height / 6
 	);
 
 	context.fillStyle = "#fff";
@@ -55,13 +55,15 @@ function render(context, state){
 		);
 	}
 
-	// center line
-	context.fillRect(
-		state.table.width / 2 ,
-		state.table.y,
-		1,
-		state.table.height
-	);
+	context.strokeStyle = "#fff";
+	var lineWidth = 2;
+	context.lineWidth = lineWidth;
+	context.setLineDash([5, 10]);
+	context.beginPath();
+	context.moveTo(state.table.width / 2,0);
+	context.lineTo(state.table.width / 2, state.table.height);
+	context.closePath();
+	context.stroke();
 
 }
 
@@ -158,10 +160,10 @@ function update(){
 function getInitialState(){
 
 	var tableWidth = 800;
-	var tableHeight = tableWidth * 0.5;
+	var tableHeight = tableWidth * 0.75;
 	var ballSize = tableWidth * 0.01;
 	var paddleWidth = ballSize;
-	var paddleHeight = tableHeight * 0.1;
+	var paddleHeight = tableHeight * 0.075;
 
 	return {
 		table: {
@@ -181,14 +183,14 @@ function getInitialState(){
 		},
 		paddles: {
 			0: {
-				x: paddleWidth,
+				x: tableWidth / 2 * 0.3,
 				y: 100,
 				width: paddleWidth,
 				height: paddleHeight,
 				score: 0
 			},
 			1: {
-				x: tableWidth - paddleWidth * 2,
+				x: tableWidth - tableWidth / 2 * 0.3,
 				y: 100,
 				width: paddleWidth,
 				height: paddleHeight,
