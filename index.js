@@ -161,8 +161,6 @@ function getInitialState(){
 	var paddleWidth = ballSize;
 	var paddleHeight = Math.ceil(tableHeight * 0.075);
 
-	console.log(paddleHeight);
-
 	return {
 		defaultBallPosition: {
 			x: Math.ceil(tableWidth / 2 - ballSize / 2),
