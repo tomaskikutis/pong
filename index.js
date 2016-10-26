@@ -156,15 +156,17 @@ function update(){
 function getInitialState(){
 
 	var tableWidth = 800;
-	var tableHeight = tableWidth * 0.75;
-	var ballSize = tableWidth * 0.01;
+	var tableHeight = Math.ceil(tableWidth * 0.75);
+	var ballSize = Math.ceil(tableWidth * 0.01);
 	var paddleWidth = ballSize;
-	var paddleHeight = tableHeight * 0.075;
+	var paddleHeight = Math.ceil(tableHeight * 0.075);
+
+	console.log(paddleHeight);
 
 	return {
 		defaultBallPosition: {
-			x: tableWidth / 2 - ballSize / 2,
-			y: tableWidth / 2 - ballSize / 2
+			x: Math.ceil(tableWidth / 2 - ballSize / 2),
+			y: Math.ceil(tableWidth / 2 - ballSize / 2)
 		},
 		table: {
 			x: 0,
@@ -173,8 +175,8 @@ function getInitialState(){
 			height: tableHeight
 		},
 		ball: {
-			x: tableWidth / 2 - ballSize / 2,
-			y: tableHeight / 2 - ballSize / 2,
+			x: Math.ceil(tableWidth / 2 - ballSize / 2),
+			y: Math.ceil(tableHeight / 2 - ballSize / 2),
 			width: ballSize,
 			height: ballSize,
 			directionX: 1,
@@ -183,15 +185,15 @@ function getInitialState(){
 		},
 		paddles: {
 			0: {
-				x: tableWidth / 2 * 0.3,
-				y: tableHeight / 2 - paddleHeight / 2,
+				x: Math.ceil(tableWidth / 2 * 0.3),
+				y: Math.ceil(tableHeight / 2 - paddleHeight / 2),
 				width: paddleWidth,
 				height: paddleHeight,
 				score: 0
 			},
 			1: {
-				x: tableWidth - tableWidth / 2 * 0.3,
-				y: tableHeight / 2 - paddleHeight / 2,
+				x: Math.ceil(tableWidth - tableWidth / 2 * 0.3),
+				y: Math.ceil(tableHeight / 2 - paddleHeight / 2),
 				width: paddleWidth,
 				height: paddleHeight,
 				score: 0
