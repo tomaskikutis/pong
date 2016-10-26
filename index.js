@@ -35,7 +35,7 @@ function render(context, state){
 		state.table.height / 6
 	);
 
-	context.fillStyle = "#fff";
+	// ball
 
 	context.fillRect(
 		state.ball.x,
@@ -55,6 +55,7 @@ function render(context, state){
 		);
 	}
 
+	// center line
 	context.strokeStyle = "#fff";
 	var lineWidth = 2;
 	context.lineWidth = lineWidth;
