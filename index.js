@@ -110,8 +110,8 @@ function update(){
 	state.ball.x += state.ball.directionX * state.ball.speed;
 	state.ball.y += state.ball.directionY * state.ball.speed;
 
-	// evil bot
-	state.paddles[1].y = state.ball.y;
+	// bot
+	state.paddles[1].y = state.ball.y * 0.9;
 
 	for (var key in state.paddles) {
 
