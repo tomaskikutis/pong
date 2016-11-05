@@ -155,7 +155,7 @@ function update(){
 
 function getInitialState(){
 
-	var tableWidth = 800;
+	var tableWidth = 700;
 	var tableHeight = Math.ceil(tableWidth * 0.75);
 	var ballSize = Math.ceil(tableWidth * 0.01);
 	var paddleWidth = ballSize;
